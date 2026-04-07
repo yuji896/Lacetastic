@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Light Theme Colors -->
+    <color name="primary_pink">#ED3B79</color>
+    <color name="text_color_primary">#6C0025</color>
+    <color name="text_color_secondary">#CF0F47</color>
+    <color name="bg_gradient_start">#FFB1C1</color>
+    <color name="bg_gradient_end">#FFFFFF</color>
+    <color name="card_bg">#FFFFFF</color>
+    <color name="nav_bg">#ED3B79</color>
+    <color name="nav_icon_unselected">#FFCCD8</color>
+</resources>

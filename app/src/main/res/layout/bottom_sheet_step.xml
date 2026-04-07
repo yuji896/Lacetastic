@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/white_pill_bg"
+    android:backgroundTint="#FFFFFF">
+
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:background="#DDDDDD" />
+
+    <TextView
+        android:id="@+id/tvStepTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Step Title"
+        android:textColor="#6C0025"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:id="@+id/tvStepDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Step Description goes here."
+        android:textColor="#886C0025"
+        android:textSize="15sp"
+        android:lineSpacingExtra="4sp"
+        android:layout_marginBottom="24dp" />
+
+    <Button
+        android:id="@+id/btnGotIt"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Got it!"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#ED3B79"
+        android:textAllCaps="false"
+        android:textStyle="bold" />
+
+</LinearLayout>

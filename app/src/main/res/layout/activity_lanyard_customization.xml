@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Root FrameLayout: panel + bottom bar OVERLAY the canvas at the bottom.
+    Canvas never resizes when tools open/close.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:fitsSystemWindows="true">
+
+    <!-- ── MAIN COLUMN: top bar + toolbar + canvas ──────────────────────────── -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- TOP BAR -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="60dp"
+            android:background="@drawable/header_gradient_background"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_back_white"
+                android:contentDescription="Back"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Lanyard Editor"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:text="LANYARD"
+                android:textSize="10sp"
+                android:textColor="#E91E63"
+                android:backgroundTint="#FFFFFF"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:layout_marginEnd="8dp"
+                android:stateListAnimator="@null" />
+
+
+
+            <ImageView
+                android:id="@+id/btnProfile"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_profile_white"
+                android:contentDescription="Profile"
+                android:clickable="true"
+                android:focusable="true" />
+
+        </LinearLayout>
+
+        <!-- TOOLBAR: undo | redo | front | back | divider | LEFT | MIDDLE | RIGHT | spacer | Preview -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:scrollbars="none"
+            android:background="#FFFFFF"
+            android:elevation="2dp"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp">
+
+                <!-- Undo -->
+                <ImageView
+                    android:id="@+id/btnUndo"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/ic_undo"
+                    android:contentDescription="Undo"
+                    android:padding="6dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
+
+                <!-- Redo -->
+                <ImageView
+                    android:id="@+id/btnRedo"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/ic_redo"
+                    android:contentDescription="Redo"
+                    android:padding="6dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
+
+                <!-- Bring to Front -->
+                <ImageView
+                    android:id="@+id/btnBringFront"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/ic_bring_front"
+                    android:contentDescription="Bring to Front"
+                    android:padding="6dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
+
+                <!-- Send to Back -->
+                <ImageView
+                    android:id="@+id/btnSendBack"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/ic_send_back"
+                    android:contentDescription="Send to Back"
+                    android:padding="6dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="24dp"
+                    android:background="#DDDDDD"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp" />
+
+                <!-- LEFT strap tab -->
+                <TextView
+                    android:id="@+id/btnLeft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:gravity="center"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:text="LEFT"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:textColor="#555555"
+                    android:background="@android:color/transparent"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <!-- MIDDLE strap tab -->
+                <TextView
+                    android:id="@+id/btnMiddle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:gravity="center"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:text="MIDDLE"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/tab_active_bg"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <!-- RIGHT strap tab -->
+                <TextView
+                    android:id="@+id/btnRight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:gravity="center"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:text="RIGHT"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:textColor="#555555"
+                    android:background="@android:color/transparent"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="24dp"
+                    android:background="#DDDDDD"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp" />
+
+                <!-- Preview button -->
+                <LinearLayout
+                    android:id="@+id/btnFullPreview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless">
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_preview"
+                        android:contentDescription="Preview" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Preview"
+                        android:textSize="10sp"
+                        android:textColor="#333333"
+                        android:layout_marginStart="4dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- CANVAS AREA: single FrameLayout, all 3 strap wrappers stacked inside.
+             Only ONE wrapper is VISIBLE at a time — the others are GONE.
+             This is the correct way to switch between left/middle/right without overlap. -->
+        <FrameLayout
+            android:id="@+id/canvasArea"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#F0F0F0"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+
+            <!-- LEFT strap wrapper: full height, GONE by default -->
+            <com.example.lacetastic.LanyardZoomWrapper
+                android:id="@+id/wrapperLeftStrap"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="80dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:visibility="gone">
+                <com.example.lacetastic.LanyardStrapView
+                    android:id="@+id/viewLeftStrap"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <!-- canvasLeft injected here at runtime; same MATCH_PARENT size -->
+            </com.example.lacetastic.LanyardZoomWrapper>
+
+            <!-- MIDDLE strap wrapper: 48dp centered, VISIBLE by default -->
+            <com.example.lacetastic.LanyardZoomWrapper
+                android:id="@+id/wrapperMiddleStrap"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:visibility="visible">
+                <!-- Strap height is set programmatically to width*0.13 in the Activity -->
+                <com.example.lacetastic.LanyardStrapView
+                    android:id="@+id/viewMiddleStrap"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+                <!-- canvasMiddle is MATCH_PARENT — images can be enlarged freely;
+                     clip path in LanyardCanvasView constrains visible content to strap shape -->
+            </com.example.lacetastic.LanyardZoomWrapper>
+
+            <!-- RIGHT strap wrapper: full height, GONE by default -->
+            <com.example.lacetastic.LanyardZoomWrapper
+                android:id="@+id/wrapperRightStrap"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="80dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:visibility="gone">
+                <com.example.lacetastic.LanyardStrapView
+                    android:id="@+id/viewRightStrap"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <!-- canvasRight injected here at runtime -->
+            </com.example.lacetastic.LanyardZoomWrapper>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <!-- PANEL CONTAINER: overlays from the bottom, 220dp tall -->
+    <FrameLayout
+        android:id="@+id/panelContainer"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_gravity="bottom"
+        android:background="#F8F8F8"
+        android:elevation="16dp"
+        android:visibility="gone" />
+
+    <!-- BOTTOM TAB BAR: overlays at the very bottom, above panel -->
+    <LinearLayout
+        android:id="@+id/bottomTabBar"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:elevation="8dp"
+        android:gravity="center"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <LinearLayout
+            android:id="@+id/tabText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_tab_text"
+                android:contentDescription="Text" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Text"
+                android:textSize="11sp"
+                android:textColor="#333333"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tabElements"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_tab_elements"
+                android:contentDescription="Elements" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Elements"
+                android:textSize="11sp"
+                android:textColor="#333333"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tabIcons"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_tab_icons"
+                android:contentDescription="Shapes" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Shapes"
+                android:textSize="11sp"
+                android:textColor="#333333"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tabBackground"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_tab_background"
+                android:contentDescription="Background" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Background"
+                android:textSize="11sp"
+                android:textColor="#333333"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
