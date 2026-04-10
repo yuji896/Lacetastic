@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F8F8F8"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Background Color"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/closeBackgroundPanelButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_close" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="12dp">
+        <View
+            android:id="@+id/backgroundColorPreview"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="#333333" />
+        <EditText
+            android:id="@+id/backgroundHexInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:hint="#FFFFFF"
+            android:textSize="14sp" />
+        <Button
+            android:id="@+id/chooseCustomColorButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Picker"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:rowCount="2"
+        android:columnCount="5"
+        android:layout_marginTop="12dp"
+        android:alignmentMode="alignMargins">
+        <View android:id="@+id/presetWhite" android:layout_width="40dp" android:layout_height="40dp" android:background="#FFFFFF" android:layout_margin="4dp" />
+        <View android:id="@+id/presetLightGray" android:layout_width="40dp" android:layout_height="40dp" android:background="#D3D3D3" android:layout_margin="4dp" />
+        <View android:id="@+id/presetGray" android:layout_width="40dp" android:layout_height="40dp" android:background="#888888" android:layout_margin="4dp" />
+        <View android:id="@+id/presetDarkGray" android:layout_width="40dp" android:layout_height="40dp" android:background="#444444" android:layout_margin="4dp" />
+        <View android:id="@+id/presetBlack" android:layout_width="40dp" android:layout_height="40dp" android:background="#000000" android:layout_margin="4dp" />
+        <View android:id="@+id/presetRed" android:layout_width="40dp" android:layout_height="40dp" android:background="#FF0000" android:layout_margin="4dp" />
+        <View android:id="@+id/presetBlue" android:layout_width="40dp" android:layout_height="40dp" android:background="#0000FF" android:layout_margin="4dp" />
+        <View android:id="@+id/presetGreen" android:layout_width="40dp" android:layout_height="40dp" android:background="#00FF00" android:layout_margin="4dp" />
+        <View android:id="@+id/presetYellow" android:layout_width="40dp" android:layout_height="40dp" android:background="#FFFF00" android:layout_margin="4dp" />
+        <View android:id="@+id/presetPink" android:layout_width="40dp" android:layout_height="40dp" android:background="#E91E63" android:layout_margin="4dp" />
+    </GridLayout>
+
+</LinearLayout>

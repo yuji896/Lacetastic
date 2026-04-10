@@ -73,7 +73,8 @@ public class HomePage extends AppCompatActivity {
         if (btnCreateDesign != null) {
             btnCreateDesign.setOnClickListener(v -> {
                 animateClick(v, () -> {
-                    startActivity(new Intent(HomePage.this, CustomizationPage.class));
+                    // Changed from CustomizationPage to LanyardCustomizationActivity
+                    startActivity(new Intent(HomePage.this, LanyardCustomizationActivity.class));
                 });
             });
         }
@@ -82,7 +83,8 @@ public class HomePage extends AppCompatActivity {
         if (penIcon != null) {
             penIcon.setOnClickListener(v -> {
                 animateClick(v, () -> {
-                    startActivity(new Intent(HomePage.this, CustomizationPage.class));
+                    // Changed from CustomizationPage to LanyardCustomizationActivity
+                    startActivity(new Intent(HomePage.this, LanyardCustomizationActivity.class));
                 });
             });
         }

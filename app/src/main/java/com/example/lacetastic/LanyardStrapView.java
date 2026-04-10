@@ -4,8 +4,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Shader;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -33,7 +36,14 @@ public class LanyardStrapView extends View {
 
     private StrapType strapType  = StrapType.LEFT;
     private final Paint strapPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint decorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private int strapColor = 0xFF333333;
+
+    /**
+     * When enabled, draws fixed template trim (gold–orange chevrons + diagonal word band)
+     * like cooperative lanyard reference art. Not editable on-canvas — structure only.
+     */
+    private boolean templateStyleEnabled = false;
 
     // ── Constructors ──────────────────────────────────────────────────────────
 
@@ -75,6 +85,15 @@ public class LanyardStrapView extends View {
 
     public int getStrapColor() {
         return strapColor;
+    }
+
+    public void setTemplateStyleEnabled(boolean enabled) {
+        this.templateStyleEnabled = enabled;
+        invalidate();
+    }
+
+    public boolean isTemplateStyleEnabled() {
+        return templateStyleEnabled;
     }
 
     /**
@@ -154,6 +173,9 @@ public class LanyardStrapView extends View {
         canvas.save();
         canvas.rotate(-13f, pivotX, pivotY);
         canvas.drawRect(rectLeft, lrTop, rectRight, lrBot, strapPaint);
+        if (templateStyleEnabled) {
+            drawCooperativeTemplateOnVerticalStrap(canvas, rectLeft, lrTop, rectRight, lrBot);
+        }
         canvas.restore();
     }
 
@@ -182,6 +204,10 @@ public class LanyardStrapView extends View {
         path.close();
 
         canvas.drawPath(path, strapPaint);
+        if (templateStyleEnabled) {
+            drawCooperativeTemplateOnMiddleStrap(canvas, w, h, path, midTop, midBot,
+                    botLeft, botRight, tlX, trX);
+        }
     }
 
     // ── RIGHT ─────────────────────────────────────────────────────────────────
@@ -205,6 +231,105 @@ public class LanyardStrapView extends View {
         canvas.save();
         canvas.rotate(13f, pivotX, pivotY);
         canvas.drawRect(rectLeft, lrTop, rectRight, lrBot, strapPaint);
+        if (templateStyleEnabled) {
+            drawCooperativeTemplateOnVerticalStrap(canvas, rectLeft, lrTop, rectRight, lrBot);
+        }
         canvas.restore();
+    }
+
+    // ── TBWSC-style template (fixed graphics on strap, not canvas elements) ─────
+
+    private void drawCooperativeTemplateOnVerticalStrap(Canvas canvas,
+            float rectLeft, float lrTop, float rectRight, float lrBot) {
+        float strapH = lrBot - lrTop;
+        float strapW = rectRight - rectLeft;
+        if (strapH < 8 || strapW < 4) return;
+
+        float bandH = Math.min(strapH * 0.13f, strapW * 2.2f);
+        drawChevronBand(canvas, rectLeft, lrTop, rectRight, lrTop + bandH, true);
+        drawChevronBand(canvas, rectLeft, lrBot - bandH, rectRight, lrBot, false);
+
+        float midT = lrTop + strapH * 0.32f;
+        float midB = lrTop + strapH * 0.68f;
+        drawDiagonalWordBand(canvas, rectLeft + 1, midT, rectRight - 1, midB);
+    }
+
+    private void drawCooperativeTemplateOnMiddleStrap(Canvas canvas, int w, int h, Path strapPath,
+            float midTop, float midBot, float botLeft, float botRight, float tlX, float trX) {
+        canvas.save();
+        canvas.clipPath(strapPath);
+        int gold0 = 0xFFFFE082;
+        int gold1 = 0xFFFF9800;
+        float band = Math.max(4f, (midBot - midTop) * 0.35f);
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+        p.setShader(new LinearGradient(0, midTop, w, midTop + band, gold0, gold1, Shader.TileMode.CLAMP));
+        canvas.drawRect(0, midTop, w, midTop + band, p);
+        p.setShader(new LinearGradient(0, midBot - band, w, midBot, gold1, gold0, Shader.TileMode.CLAMP));
+        canvas.drawRect(0, midBot - band, w, midBot, p);
+        float innerT = midTop + band * 0.8f;
+        float innerB = midBot - band * 0.8f;
+        float innerL = Math.min(tlX, botLeft) + 4;
+        float innerR = Math.max(trX, botRight) - 4;
+        if (innerB > innerT + 6) drawDiagonalWordBand(canvas, innerL, innerT, innerR, innerB);
+        p.setShader(null);
+        canvas.restore();
+    }
+
+    private void drawChevronBand(Canvas c, float l, float t, float r, float b, boolean pointsDown) {
+        float h = b - t;
+        float w = r - l;
+        if (h < 2 || w < 2) return;
+        decorPaint.setShader(new LinearGradient(l, t, r, t, 0xFFFFF59D, 0xFFFF9800, Shader.TileMode.CLAMP));
+        decorPaint.setStyle(Paint.Style.FILL);
+        float cy = (t + b) / 2f;
+        float chevW = Math.min(w / 3.2f, h * 0.85f);
+        float halfH = h * 0.38f;
+        float gap = w * 0.06f;
+        float startX = l + gap;
+        for (int i = 0; i < 3; i++) {
+            float cx = startX + i * (chevW + gap * 0.35f);
+            Path ch = chevronPath(cx, cy, chevW * 0.45f, halfH, pointsDown);
+            c.drawPath(ch, decorPaint);
+        }
+        decorPaint.setShader(null);
+    }
+
+    /** Single chevron: V opening toward +X (stacked >>>) */
+    private Path chevronPath(float cx, float cy, float halfW, float halfH, boolean pointDown) {
+        Path path = new Path();
+        if (!pointDown) {
+            path.moveTo(cx - halfW, cy - halfH);
+            path.lineTo(cx + halfW, cy);
+            path.lineTo(cx - halfW, cy + halfH);
+        } else {
+            path.moveTo(cx - halfW, cy + halfH);
+            path.lineTo(cx + halfW, cy);
+            path.lineTo(cx - halfW, cy - halfH);
+        }
+        path.close();
+        return path;
+    }
+
+    private void drawDiagonalWordBand(Canvas c, float l, float t, float r, float b) {
+        float bw = r - l;
+        float bh = b - t;
+        if (bw < 4 || bh < 4) return;
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+        p.setColor(0x5AFFE082);
+        p.setTypeface(Typeface.DEFAULT_BOLD);
+        p.setTextSize(Math.max(7f, Math.min(bw, bh) * 0.11f));
+        String word = "LACETASTIC";
+        float tw = p.measureText(word + "   ");
+        float th = p.getTextSize() * 1.75f;
+        c.save();
+        float cx = (l + r) / 2f;
+        float cy = (t + b) / 2f;
+        c.rotate(-52f, cx, cy);
+        for (float y = t - bh; y < b + bh; y += th) {
+            for (float x = l - bw; x < r + bw; x += tw) {
+                c.drawText(word, x, y, p);
+            }
+        }
+        c.restore();
     }
 }

@@ -9,6 +9,7 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.DashPathEffect;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
@@ -135,6 +136,14 @@ public class DesignCanvasView extends View {
         invalidate();
     }
 
+    protected boolean isFreePositioning() {
+        return false;
+    }
+
+    protected Path getClipPath() {
+        return null;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -207,6 +216,8 @@ public class DesignCanvasView extends View {
         Bitmap bmp = el.getImageBitmap();
         if (bmp == null) return;
         canvas.save();
+        Path clip = getClipPath();
+        if (clip != null) canvas.clipPath(clip);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
         paint.setAlpha(el.getOpacity());
         if (el.getColorFilter() != null) paint.setColorFilter(el.getColorFilter());
@@ -232,6 +243,25 @@ public class DesignCanvasView extends View {
         if (w <= 0 || h <= 0) return;
         float hw = w / 2f;
         float hh = h / 2f;
+
+        if (el.isLayoutLocked()) {
+            canvas.save();
+            canvas.translate(el.getX(), el.getY());
+            canvas.rotate(el.getRotation());
+            if (el.isFlipHorizontal()) canvas.scale(-1, 1);
+            if (el.isFlipVertical())   canvas.scale(1, -1);
+            Paint slotPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            slotPaint.setStyle(Paint.Style.STROKE);
+            slotPaint.setStrokeWidth(2.5f);
+            slotPaint.setColor(0xCCFFFFFF);
+            slotPaint.setPathEffect(new DashPathEffect(new float[]{10, 6}, 0));
+            float pad = 6f;
+            canvas.drawRoundRect(new RectF(-hw - pad, -hh - pad, hw + pad, hh + pad), 8f, 8f, slotPaint);
+            canvas.restore();
+            clearHandlePositions();
+            return;
+        }
+
         canvas.save();
         canvas.translate(el.getX(), el.getY());
         canvas.rotate(el.getRotation());
@@ -286,6 +316,15 @@ public class DesignCanvasView extends View {
         deleteButtonY = sd[1];
     }
 
+    private void clearHandlePositions() {
+        for (int i = 0; i < 8; i++) {
+            handleX[i] = -10000f;
+            handleY[i] = -10000f;
+        }
+        rotationHandleX = rotationHandleY = -10000f;
+        deleteButtonX = deleteButtonY = -10000f;
+    }
+
     private Matrix elementMatrix(DesignElement el) {
         Matrix m = new Matrix();
         m.postTranslate(-el.getX(), -el.getY());
@@ -330,12 +369,14 @@ public class DesignCanvasView extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
                 if (selectedElement != null && isTouchingDeleteButton(x, y)) {
-                    removeElement(selectedElement);
-                    selectedElement = null;
-                    invalidate();
-                    return true;
+                    if (!selectedElement.isLayoutLocked()) {
+                        removeElement(selectedElement);
+                        selectedElement = null;
+                        invalidate();
+                        return true;
+                    }
                 }
-                if (selectedElement != null) {
+                if (selectedElement != null && !selectedElement.isLayoutLocked()) {
                     int hi = hitResizeHandle(x, y);
                     if (hi >= 0) {
                         isResizing = true;
@@ -352,7 +393,8 @@ public class DesignCanvasView extends View {
                         return true;
                     }
                 }
-                if (selectedElement != null && isTouchingRotationHandle(x, y)) {
+                if (selectedElement != null && !selectedElement.isLayoutLocked()
+                        && isTouchingRotationHandle(x, y)) {
                     isRotating = true;
                     lastTouchX = x; lastTouchY = y;
                     saveStateForUndo();
@@ -386,12 +428,12 @@ public class DesignCanvasView extends View {
                 break;
             }
             case MotionEvent.ACTION_MOVE: {
-                if (isResizing && selectedElement != null) {
+                if (isResizing && selectedElement != null && !selectedElement.isLayoutLocked()) {
                     handleResizeDrag(x, y);
                     lastTouchX = x; lastTouchY = y;
                     invalidate(); return true;
                 }
-                if (isRotating && selectedElement != null) {
+                if (isRotating && selectedElement != null && !selectedElement.isLayoutLocked()) {
                     float cx = selectedElement.getX();
                     float cy = selectedElement.getY();
                     float startAngle   = (float) Math.toDegrees(Math.atan2(lastTouchY - cy, lastTouchX - cx));
@@ -402,13 +444,15 @@ public class DesignCanvasView extends View {
                     lastTouchX = x; lastTouchY = y;
                     invalidate(); return true;
                 }
-                if (isDragging && selectedElement != null) {
+                if (isDragging && selectedElement != null && !selectedElement.isLayoutLocked()) {
                     float newX = selectedElement.getX() + (x - lastTouchX);
                     float newY = selectedElement.getY() + (y - lastTouchY);
-                    float hw = selectedElement.getDisplayWidth()  / 2f;
-                    float hh = selectedElement.getDisplayHeight() / 2f;
-                    newX = Math.max(hw, Math.min(getWidth()  - hw, newX));
-                    newY = Math.max(hh, Math.min(getHeight() - hh, newY));
+                    if (!isFreePositioning()) {
+                        float hw = selectedElement.getDisplayWidth() / 2f;
+                        float hh = selectedElement.getDisplayHeight() / 2f;
+                        newX = Math.max(hw, Math.min(getWidth() - hw, newX));
+                        newY = Math.max(hh, Math.min(getHeight() - hh, newY));
+                    }
                     selectedElement.setX(newX);
                     selectedElement.setY(newY);
                     lastTouchX = x; lastTouchY = y;
@@ -458,8 +502,10 @@ public class DesignCanvasView extends View {
             case 6: newCY = ay + newH / 2f; break;
             case 7: newCX = ax + newW / 2f; newCY = ay + newH / 2f; break;
         }
-        newCX = Math.max(newW / 2f, Math.min(getWidth()  - newW / 2f, newCX));
-        newCY = Math.max(newH / 2f, Math.min(getHeight() - newH / 2f, newCY));
+        if (!isFreePositioning()) {
+            newCX = Math.max(newW / 2f, Math.min(getWidth() - newW / 2f, newCX));
+            newCY = Math.max(newH / 2f, Math.min(getHeight() - newH / 2f, newCY));
+        }
         selectedElement.setX(newCX); selectedElement.setY(newCY);
         selectedElement.setDisplayWidth(newW); selectedElement.setDisplayHeight(newH);
     }
@@ -573,6 +619,7 @@ public class DesignCanvasView extends View {
     public List<DesignElement> getElements()                   { return elements; }
 
     public void removeElement(DesignElement el) {
+        if (el != null && el.isLayoutLocked()) return;
         saveStateForUndo();
         elements.remove(el);
         if (selectedElement == el) selectedElement = null;
@@ -587,28 +634,28 @@ public class DesignCanvasView extends View {
     }
 
     public void bringToFront() {
-        if (selectedElement == null) return;
+        if (selectedElement == null || selectedElement.isLayoutLocked()) return;
         saveStateForUndo();
         int index = elements.indexOf(selectedElement);
         if (index < elements.size() - 1) { elements.remove(index); elements.add(selectedElement); invalidate(); }
     }
 
     public void sendToBack() {
-        if (selectedElement == null) return;
+        if (selectedElement == null || selectedElement.isLayoutLocked()) return;
         saveStateForUndo();
         int index = elements.indexOf(selectedElement);
         if (index > 0) { elements.remove(index); elements.add(0, selectedElement); invalidate(); }
     }
 
     public void moveForward() {
-        if (selectedElement == null) return;
+        if (selectedElement == null || selectedElement.isLayoutLocked()) return;
         saveStateForUndo();
         int index = elements.indexOf(selectedElement);
         if (index < elements.size() - 1) { Collections.swap(elements, index, index + 1); invalidate(); }
     }
 
     public void moveBackward() {
-        if (selectedElement == null) return;
+        if (selectedElement == null || selectedElement.isLayoutLocked()) return;
         saveStateForUndo();
         int index = elements.indexOf(selectedElement);
         if (index > 0) { Collections.swap(elements, index, index - 1); invalidate(); }

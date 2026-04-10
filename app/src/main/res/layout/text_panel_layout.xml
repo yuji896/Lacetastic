@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F8F8F8"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <EditText
+            android:id="@+id/textInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Type text here..."
+            android:textSize="14sp" />
+        <Button
+            android:id="@+id/addTextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add"
+            android:textSize="12sp" />
+        <ImageView
+            android:id="@+id/closeTextPanelButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_close"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:layout_marginTop="8dp">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <Spinner android:id="@+id/fontFamilySpinner" android:layout_width="120dp" android:layout_height="wrap_content" />
+            <EditText android:id="@+id/textSizeInput" android:layout_width="50dp" android:layout_height="wrap_content" android:hint="Size" android:inputType="number" android:textSize="12sp" />
+            <View android:id="@+id/colorPreview" android:layout_width="30dp" android:layout_height="30dp" android:background="#000000" android:layout_margin="4dp" />
+            <Button android:id="@+id/boldButton" android:layout_width="40dp" android:layout_height="40dp" android:text="B" android:textStyle="bold" />
+            <Button android:id="@+id/italicButton" android:layout_width="40dp" android:layout_height="40dp" android:text="I" android:textStyle="italic" />
+            <Button android:id="@+id/underlineButton" android:layout_width="40dp" android:layout_height="40dp" android:text="U" />
+            <ImageButton android:id="@+id/alignLeftButton" android:layout_width="40dp" android:layout_height="40dp" android:src="@android:drawable/ic_menu_sort_alphabetically" />
+            <ImageButton android:id="@+id/alignCenterButton" android:layout_width="40dp" android:layout_height="40dp" android:src="@android:drawable/ic_menu_sort_alphabetically" />
+            <ImageButton android:id="@+id/alignRightButton" android:layout_width="40dp" android:layout_height="40dp" android:src="@android:drawable/ic_menu_sort_alphabetically" />
+            <Button android:id="@+id/removeTextButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Delete" android:textColor="#FF0000" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:layout_marginTop="8dp">
+        <TextView android:text="Scale" android:textSize="10sp" />
+        <LinearLayout android:orientation="horizontal" android:gravity="center_vertical">
+            <SeekBar android:id="@+id/scaleSeekBar" android:layout_width="120dp" android:layout_height="wrap_content" android:max="300" android:progress="100" />
+            <TextView android:id="@+id/scaleValue" android:text="100%" android:textSize="10sp" />
+        </LinearLayout>
+
+        <TextView android:text="Rotate" android:textSize="10sp" />
+        <LinearLayout android:orientation="horizontal" android:gravity="center_vertical">
+            <SeekBar android:id="@+id/rotationSeekBar" android:layout_width="120dp" android:layout_height="wrap_content" android:max="360" />
+            <TextView android:id="@+id/rotationValue" android:text="0°" android:textSize="10sp" />
+        </LinearLayout>
+
+        <TextView android:text="Opacity" android:textSize="10sp" />
+        <LinearLayout android:orientation="horizontal" android:gravity="center_vertical">
+            <SeekBar android:id="@+id/opacitySeekBar" android:layout_width="120dp" android:layout_height="wrap_content" android:max="100" android:progress="100" />
+            <TextView android:id="@+id/opacityValue" android:text="100%" android:textSize="10sp" />
+        </LinearLayout>
+    </GridLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="4dp">
+        <TextView android:text="Letter" android:textSize="10sp" />
+        <SeekBar android:id="@+id/letterSpacingSeekBar" android:layout_width="80dp" android:layout_height="wrap_content" android:max="50" />
+        <TextView android:id="@+id/letterSpacingValue" android:text="0" android:textSize="10sp" />
+        <TextView android:text="Line" android:textSize="10sp" android:layout_marginStart="8dp" />
+        <SeekBar android:id="@+id/lineSpacingSeekBar" android:layout_width="80dp" android:layout_height="wrap_content" android:max="200" android:progress="100" />
+        <TextView android:id="@+id/lineSpacingValue" android:text="1.0" android:textSize="10sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="4dp">
+        <Button android:id="@+id/flipHorizontalButton" android:layout_width="wrap_content" android:layout_height="32dp" android:text="Flip H" android:textSize="10sp" />
+        <Button android:id="@+id/flipVerticalButton" android:layout_width="wrap_content" android:layout_height="32dp" android:text="Flip V" android:textSize="10sp" />
+        <Button android:id="@+id/orientationHorizontalButton" android:layout_width="wrap_content" android:layout_height="32dp" android:text="Horiz" android:textSize="10sp" />
+        <Button android:id="@+id/orientationVerticalButton" android:layout_width="wrap_content" android:layout_height="32dp" android:text="Vert" android:textSize="10sp" />
+    </LinearLayout>
+
+</LinearLayout>

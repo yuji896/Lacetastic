@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F8F8F8"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Image Effects"
+            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/closeEffectsPanelButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_close" />
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <Button android:id="@+id/effectOriginal" android:layout_width="80dp" android:layout_height="match_parent" android:text="Original" android:textSize="10sp" />
+            <Button android:id="@+id/effectGrayscale" android:layout_width="80dp" android:layout_height="match_parent" android:text="Grayscale" android:textSize="10sp" />
+            <Button android:id="@+id/effectSepia" android:layout_width="80dp" android:layout_height="match_parent" android:text="Sepia" android:textSize="10sp" />
+            <Button android:id="@+id/effectBright" android:layout_width="80dp" android:layout_height="match_parent" android:text="Bright" android:textSize="10sp" />
+            <Button android:id="@+id/effectContrast" android:layout_width="80dp" android:layout_height="match_parent" android:text="Contrast" android:textSize="10sp" />
+            <Button android:id="@+id/effectVintage" android:layout_width="80dp" android:layout_height="match_parent" android:text="Vintage" android:textSize="10sp" />
+            <Button android:id="@+id/effectBlur" android:layout_width="80dp" android:layout_height="match_parent" android:text="Blur" android:textSize="10sp" />
+            <Button android:id="@+id/effectSharpen" android:layout_width="80dp" android:layout_height="match_parent" android:text="Sharpen" android:textSize="10sp" />
+            <Button android:id="@+id/effectEmboss" android:layout_width="80dp" android:layout_height="match_parent" android:text="Emboss" android:textSize="10sp" />
+        </LinearLayout>
+    </HorizontalScrollView>
+</LinearLayout>

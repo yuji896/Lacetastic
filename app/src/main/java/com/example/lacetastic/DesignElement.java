@@ -40,6 +40,14 @@ public class DesignElement {
     private ColorMatrixColorFilter colorFilter;
     private Rect bounds;
 
+    private String tag = null;
+
+    /**
+     * When true, the element stays fixed on the template: no drag, resize, rotate, or delete
+     * from the canvas (Canva-style slots). Content can still be edited via tap.
+     */
+    private boolean layoutLocked = false;
+
     public DesignElement(ElementType type) {
         this.type = type;
         this.bounds = new Rect();
@@ -69,6 +77,11 @@ public class DesignElement {
         }
     }
 
+    public String getTag()           { return tag; }
+    public void   setTag(String tag) { this.tag = tag; }
+
+    public boolean isLayoutLocked() { return layoutLocked; }
+    public void setLayoutLocked(boolean layoutLocked) { this.layoutLocked = layoutLocked; }
     public float getDisplayWidth() {
         if (type == ElementType.TEXT) {
             String t = (text == null || text.isEmpty()) ? "Text" : text;
@@ -139,6 +152,8 @@ public class DesignElement {
             cloned.imageBitmap = this.imageBitmap; cloned.colorFilter = this.colorFilter;
             cloned.imageMatrix = new Matrix(this.imageMatrix);
         }
+        cloned.tag = this.tag;
+        cloned.layoutLocked = this.layoutLocked;
         return cloned;
     }
 
